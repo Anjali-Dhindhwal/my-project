@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Newsroom Generator</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    textarea, button { width: 100%; font-size: 16px; padding: 10px; margin-top: 10px; }
+    #output { margin-top: 20px; padding: 15px; background-color: #f0f0f0; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1> AI Newsroom Generator</h1>
+  <textarea id="brief" rows="5" placeholder="Enter news idea..."></textarea>
+  <button onclick="generateArticle()">Generate Article</button>
+  <div id="output">Your AI-generated article will appear here.</div>
+
+  <script>
+    async function generateArticle() {
+      const prompt = document.getElementById('brief').value;
+      const output = document.getElementById('output');
+      output.innerText = "Generating...";
+
+      try {
+        const response = await fetch('/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt })
+        });
+        const data = await response.json();
+        output.innerText = data.article || data.error || "No response.";
+      } catch (err) {
+        output.innerText = "Failed to generate article.";
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
